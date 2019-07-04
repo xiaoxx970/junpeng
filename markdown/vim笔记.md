@@ -104,7 +104,14 @@
 
 `A`:在行末开始插入
 
+`:vsp [filename]`:左右分隔窗口并打开filename
+
+`Ctrl-W,[H|J|K|L]`:上下左右移动窗口
+
 `Ctrl-W,Ctrl-W`:切换vim中的窗口
+
+# Download Oh My vim
+https://github.com/liangxianzhe/oh-my-vim
 
 # 让tmux和vim更好的配合工作：
 
