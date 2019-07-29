@@ -8,7 +8,7 @@ import getopt
 import random
 import string
 import urllib
-from urllib import request
+import urllib.request
 
 IP = bytes.decode(urllib.request.urlopen('http://ip.42.pl/raw').read())
 config_path = "/etc/shadowsocks-python/config.json"  # 配置文件路径
@@ -39,34 +39,56 @@ def main(argv):
         conf['port_password'][port_origin] = password_origin
         del conf['server_port']
         del conf['password']
-    print("[{}qr{}]     {}Print config of one port via qrcode in terminal{}".format(
-        bcolors.HEADER, bcolors.ENDC, bcolors.OKBLUE, bcolors.ENDC))
-    print("[{}add{}]    {}Add a port and generte a password{}".format(
-        bcolors.HEADER, bcolors.ENDC, bcolors.OKBLUE, bcolors.ENDC))
-    print("[{}list{}]   {}List all used port and password{}".format(
-        bcolors.HEADER, bcolors.ENDC, bcolors.OKBLUE, bcolors.ENDC))
-    print("[{}del{}]    {}Delete one port you want{}".format(
-        bcolors.HEADER, bcolors.ENDC, bcolors.OKBLUE, bcolors.ENDC))
-    print("(Press `Enter` to quit)")
-    choice = input('Choice one:')
-    print(choice)
-    if choice == "qr":
-        port_list()
-        port = input('Port to print QR:')
-        qrprint(port)
-        exit()
-    elif choice == "add":
-        add()
-    elif choice == "list":
-        port_list()
-    elif choice == "del":
-        port_list()
-        port = input('Port you want to remove:')
-        port_del(port)
+    if argv == []:   #命令后面没跟东西
+        print("[{}qr{}]     {}Print config of one port via qrcode in terminal{}".format(
+            bcolors.HEADER, bcolors.ENDC, bcolors.OKBLUE, bcolors.ENDC))
+        print("[{}add{}]    {}Add a port and generte a password{}".format(
+            bcolors.HEADER, bcolors.ENDC, bcolors.OKBLUE, bcolors.ENDC))
+        print("[{}list{}]   {}List all used port and password{}".format(
+            bcolors.HEADER, bcolors.ENDC, bcolors.OKBLUE, bcolors.ENDC))
+        print("[{}del{}]    {}Delete one port you want{}".format(
+            bcolors.HEADER, bcolors.ENDC, bcolors.OKBLUE, bcolors.ENDC))
+        print("(Press `Enter` to quit)")
+        choice = input('Choice one:')
+        print(choice)
+        if choice == "qr":
+            port_list()
+            port = input('Port to print QR:')
+            qrprint(port)
+            exit()
+        elif choice == "add":
+            port = input('Enter port:')
+            add(port)
+        elif choice == "list":
+            port_list()
+        elif choice == "del":
+            port_list()
+            port = input('Port you want to remove:')
+            port_del(port)
+        else:
+            print("choice nothing,quit")
+            exit()
     else:
-        print("usage: addss.py <qr|add|list|del>")
-        exit()
-
+        if argv[0] == "list" or argv[0] == "ls":
+            port_list()
+        elif argv[0] == "add":
+            try:
+                add(argv[1])
+            except IndexError:
+                print ("add what?")
+        elif argv[0] == "qr":
+            try:
+                qrprint(argv[1])
+            except IndexError:
+                print ("qr which?")
+        elif argv[0] == "del":
+            try:
+                port_del(argv[1])
+            except IndexError:
+                print ("del what?")
+        else:
+            print("usage: "+sys.argv[0]+" <qr|add|list|del>")
+            
 
 def load_conf():                                        # 读配置文件并返回dict对象
     read_data = []
@@ -100,14 +122,19 @@ def qrprint(port):                                      # 终端打印指定端�
         exit()
 
 
-def add():                                              # 添加端口
-    port = input('Enter port:')
+def add(port):                                              # 添加端口
+    
     if port:  # 端口有输入
         if port in conf['port_password']:  # 输入的端口已经存在
             print("port already exit")
             print("Did nothing!")
             exit()
         else:
+            try:
+                port = str(int(port))
+            except ValueError:
+                print("port must be number")
+                exit()
             password = ''.join(
                 random.sample(
                     string.ascii_letters +
