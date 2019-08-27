@@ -29,70 +29,47 @@ echo "samba服务配置完成，请设定密码："
 sudo smbpasswd -a pi
 sudo service samba reload
 sudo update-rc.d samba defaults
+
+FRP_VER=v0.28.2
 echo "开始安装frp"
 cd ~
-wget https://github.com/fatedier/frp/releases/download/v0.25.0/frp_0.25.0_linux_amd64.tar.gz
-tar -xvf frp_0.25.0_linux_amd64.tar.gz
-sudo mv frp_0.25.0_linux_amd64/ /etc/frp
-sudo mv /etc/frp/frpc.ini /etc/frp/frpc.ini.bak
-sudo echo "
+wget https://github.com/fatedier/frp/releases/download/$FRP_VER/frp_$FRP_VER_linux_amd64.tar.gz
+tar -xvf frp_$FRP_VER_linux_amd64.tar.gz && rm frp_$FRP_VER_linux_amd64.tar.gz
+sudo mkdir /etc/frp/ /usr/local/bin/frp/
+sudo mv frp_$FRP_VER_linux_amd64/frpc /usr/local/bin/frp/
+sudo tee /etc/frp/frpc.ini <<-'EOF'
 [common]
 server_addr = ali.mcyo.pw
 server_port = 7000
 
-[ss]
+[ssh_njupt]
 type = tcp
 local_ip = 127.0.0.1
-local_port = 233
-"  >> /etc/frp/frpc.ini
-sudo tee /etc/init.d/frp <<-'EOF'
-#!/bin/sh
-### BEGIN INIT INFO
-# Provides:         frp
-# Required-Start:    $network $local_fs $remote_fs $named $portmap $syslog
-# Required-Stop::    $network $local_fs $remote_fs
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start frp at boot time
-# Description:       A porxy clint
-### END INIT INFO
-do_start()
-{
-        echo "starting frp."
-        /etc/frp/frpc -c /etc/frp/frpc.ini &
+local_port = 22
+remote_port = 6422
 
-}
-do_stop()
-{
-      pkill -f /etc/frp/frpc
-      echo "stop complete."
-}
-do_restart() {
-    do_stop
-    sleep 1
-    do_start
-}
-case "$1" in
-start)
-  do_start
-   ;;
-stop)
-   do_stop
-   ;;
-status)
-  exit $?
-  ;;
-restart)
-  do_restart
-  ;;
-*)
-   echo "Usage:service frp {start|stop|restart|status}" >&2
-   exit 1
-   ;;
-esac
-exit 0
+[web-lab]
+type = http
+local_ip = 127.0.0.1
+local_port = 8888
+custom_domains = lab.mcyo.pw
 EOF
-sudo chmod +x /etc/init.d/frp
+sudo tee /etc/systemd/system/frpc.service <<-'EOF'
+[Unit]
+Description=frpc daemon
+After=syslog.target  network.target
+Wants=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/frp/frpc -c /etc/frp/frpc.ini
+Restart= always
+RestartSec=1min
+ExecStop=/usr/bin/killall frpc
+
+[Install]
+WantedBy=multi-user.target
+EOF
 sudo systemctl daemon-reload
-sudo update-rc.d frp defaults
-sudo service frp start
+sudo systemctl enable frp
+sudo systemctl start frp
