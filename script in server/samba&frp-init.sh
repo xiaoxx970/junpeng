@@ -8,13 +8,13 @@ sudo apt-get update
 sudo apt-get install samba -y
 sudo echo "
 # 分享名称
-[MyNAS]
+[Media]
 # 说明信息
 comment = NAS Storage
 # 可以访问的用户
-valid users = pi,root
+valid users = ljp,root
 # 共享文件的路径。
-path = /media/Green-EXfat
+path = /media/ljp/Media/
 # 可被其他人看到资源名称（非内容）
 browseable = yes
 # 可写
@@ -24,11 +24,9 @@ create mask = 0664
 # 新建目录的权限为 775
 directory mask = 0775
 "  >> /etc/samba/smb.conf
-testparm
+echo '\n' | testparm
 echo "samba服务配置完成，请设定密码："
-sudo smbpasswd -a pi
-sudo service samba reload
-sudo update-rc.d samba defaults
+sudo smbpasswd -a ljp
 
 FRP_VER=v0.28.2
 echo "开始安装frp"
