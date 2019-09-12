@@ -1,4 +1,35 @@
+# 搜索文件内容
+
+搜索当前目录下所有文件内容，把含有字符串"Advanced Bracket"的文件列出并显示所在行号
+
+```bash
+find .| xargs grep -rni "Advanced Bracket"
+```
+
+> -r 是递归查找
+>
+> -n 是显示行号
+>
+> -R 查找所有文件包含子目录
+>
+> -i 忽略大小写
+
+# 解压tar.gz和tar.bz2的命令
+
+1. 解压tar.gz文件
+
+```bash
+tar -zxvf ×××.tar.gz1
+```
+
+2. 解压tar.bz2文件
+
+```bash
+tar -jxvf ×××.tar.bz2
+```
+
 # proxychains代理
+
 装好后编辑配置文件：
 ```
 vim /etc/proxychains.conf
