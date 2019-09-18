@@ -41,7 +41,8 @@ def main(argv):
         del conf['server_port']
         del conf['password']
     if os.geteuid() != 0:
-        print ("In order to write config file and restart the ss server correctly, please run as root by using sudo.")
+        print ("{}Warning:{}In order to write config file and restart the ss server correctly, please run as root by using sudo.".format(
+            bcolors.WARNING, bcolors.ENDC))
     else:
         try:
             import qrcode
@@ -109,8 +110,11 @@ def load_conf():                                        # 读配置文件并返�
 def write_conf():
     with open(config_path, 'w') as dump_f:
         json.dump(conf, dump_f, indent=4)
-    os.system("/etc/init.d/shadowsocks-python restart")
-    print(bcolors.OKGREEN + "Done!" + bcolors.ENDC)
+    if os.geteuid() != 0:
+        print(bcolors.FAIL + "Can't restart server since you're not running in root!\nConfig won't go into effect till you restart ss server manually." + bcolors.ENDC)
+    else:
+        os.system("/etc/init.d/shadowsocks-python restart")
+        print(bcolors.OKGREEN + "Done!" + bcolors.ENDC)
 
 
 def port_list():                                        # 遍历所有端口并打印端口：密码
