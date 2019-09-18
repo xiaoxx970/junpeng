@@ -10,6 +10,7 @@ import string
 import urllib
 import urllib.request
 
+
 IP = bytes.decode(urllib.request.urlopen('http://ip.42.pl/raw').read())
 config_path = "/etc/shadowsocks-python/config.json"  # 配置文件路径
 #config_path = "config.json"
@@ -39,6 +40,14 @@ def main(argv):
         conf['port_password'][port_origin] = password_origin
         del conf['server_port']
         del conf['password']
+    if os.geteuid() != 0:
+        print ("In order to write config file and restart the ss server correctly, please run as root by using sudo.")
+    else:
+        try:
+            import qrcode
+        except ModuleNotFoundError:
+            if (os.system("sudo pip3 install qrcode")):
+                print("Insatll fault!\nInstall it yourself by `sudo pip3 install qrcode`")
     if argv == []:   #命令后面没跟东西
         print("[{}qr{}]     {}Print config of one port via qrcode in terminal{}".format(
             bcolors.HEADER, bcolors.ENDC, bcolors.OKBLUE, bcolors.ENDC))
@@ -68,7 +77,7 @@ def main(argv):
         else:
             print("choice nothing,quit")
             exit()
-    else:
+    else:   #命令后面有参数
         if argv[0] == "list" or argv[0] == "ls":
             port_list()
         elif argv[0] == "add":
@@ -116,7 +125,9 @@ def qrprint(port):                                      # 终端打印指定端�
         ss = ("{}:{}@{}:{}".format(Method, Password, Hostname, port)).encode('ascii')
         qr = ("ss://" + str(base64.b64encode(ss).decode('ascii')))  # 把配置字符串转换成base64格式并添加前缀
         print(qr)
-        os.system("qr {}".format(qr))  # 通过终端命令qr打印二维码
+        result = os.system("qr {}".format(qr))  # 通过终端命令qr打印二维码
+        if (result == 32512):
+            print("You have not insalled the package `qrcode`")
     else:
         print("Port not in there, did nothing!")
         exit()
