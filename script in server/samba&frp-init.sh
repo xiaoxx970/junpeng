@@ -70,5 +70,5 @@ ExecStop=/usr/bin/killall frpc
 WantedBy=multi-user.target
 EOF
 sudo systemctl daemon-reload
-sudo systemctl enable frp
-sudo systemctl start frp
+sudo systemctl enable frpc
+sudo systemctl start frpc
