@@ -28,14 +28,15 @@ echo '\n' | testparm
 echo "samba服务配置完成，请设定密码："
 sudo smbpasswd -a ljp
 
-FRP_VER=0.29.0
+FRP_VER=0.29.1
+FRP_Platfrom=arm
 echo "开始安装frp"
 cd ~
-wget https://github.com/fatedier/frp/releases/download/v${FRP_VER}/frp_${FRP_VER}_linux_amd64.tar.gz
-tar -xvf frp_{$FRP_VER}_linux_amd64.tar.gz && \
-rm -f frp_{$FRP_VER}_linux_amd64.tar.gz
+proxychains wget https://github.com/fatedier/frp/releases/download/v${FRP_VER}/frp_${FRP_VER}_linux_${FRP_Platfrom}.tar.gz
+tar -xvf frp\_$FRP_VER\_linux\_$FRP_Platfrom.tar.gz && \
+rm -f frp\_$FRP_VER\_linux\_$FRP_Platfrom.tar.gz
 sudo mkdir /etc/frp/ /usr/local/bin/frp/
-sudo mv frp_${FRP_VER}_linux_amd64/frpc /usr/local/bin/frp/
+sudo mv frp_${FRP_VER}_linux_${FRP_Platfrom}/frpc /usr/local/bin/frp/
 sudo tee /etc/frp/frpc.ini <<-'EOF'
 [common]
 server_addr = ali.mcyo.pw
