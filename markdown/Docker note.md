@@ -1,58 +1,94 @@
+- Use Docker without root
+
+    https://docs.docker.com/install/linux/linux-postinstall/
+
+    ```sh
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+    newgrp docker
+    ```
+
 - docker container
 
     - 列出正在运行的容器:
         ```
-        docker container ls
+        docker ps
         ```
+        
     - 列出所有容器:
         ```
-        docker container ls -a
+        docker ps -a
         ```
+        
     - 执行容器中的命令:
         ```
         docker (container) run --name <name> alpine ls
         ```
+    
         在alpine镜像作的容器中执行`ls`，然后输出到控制台，然后结束自己。
-
+    
         加`--rm`可以让容器在退出之后删除，默认情况下，为了排障需求，退出的容器并不会立即删除，除非手动 `docker rm`。
+        
         > 每次通过镜像名运行的容器都是互相隔离的，里面的文件修改也是。
+        
     - 开启一个容器：
-        ```
+        ```sh
         docker (container) start <container id|name>
         ```
+    
         这时候用`docker container ls`就可以看到正在运行的容器，每个容器前面都有一个`CONTAINER ID`，可以通过ID指定要执行命令的容器
+    
     - 在开启的容器中执行命令
-        ```
+        ```sh
         docker (container) exec <container id|name> ls
         ```
+    
         这里和run是不一样的,`exec`指定容器ID来执行命令,且必须在container运行中才可以执行。之前对这个容器的修改都会保留。
+    
     - 进入到一个容器中
-        ```
+        ```sh
         docker (container) exec -it <container id|name> /bin/bash
         ```
+    
     - 删除一个容器
-        ```
+        ```sh
         docker (container) rm <container id|name>
         ```
-    - 创建一个我自己的容器
-
-        在run了一个容器后，我对里面的内容进行了改变，想要把我的改变打包成一个新的容器，就用commit：
-        ```
-        docker container commit <container id|name>
-        ```
-        commit以后，在`docker image ls`中可以看到刚commit的容器镜像
         
-        `docker image tag <IMAGE_ID> ourfiglet`可以给我的镜像取名
+    - 删除所有停止的容器
+    
+        ```sh
+        docker container prune
+        ```
+    
+- 创建一个我自己的容器
+  
+    在run了一个容器后，我对里面的内容进行了改变，想要把我的改变打包成一个新的容器，就用commit：
+    ```
+    docker container commit <container id|name>
+    ```
+    commit以后，在`docker image ls`中可以看到刚commit的容器镜像
+
+    `docker image tag <IMAGE_ID> ourfiglet`可以给我的镜像取名
+    
 - docker image
     - 列出本机所有镜像
-        ```
+        ```sh
         docker image ls
         ```
+        
+    - 删除所有镜像
+    
+        ```sh
+        docker image prune
+        ```
+    
 - docker pull
     - 下载镜像到本机
         ```
         docker pull [选项] [Docker Registry 地址[:端口号]/]仓库名[:标签]
         ```
+    
 - Dockerfile
 
     一个强大的docker定义文件，类似于travis的yml文件，里面指定需要的运行环境，变量，以及要执行的指令。
