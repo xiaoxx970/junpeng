@@ -1,4 +1,24 @@
-# 搜索文件内容
+# Git
+
+## 强制拉取使用线上版本
+
+```sh
+git fetch -all
+git reset --hard origin/master
+git pull
+```
+
+## 设置代理
+
+```sh
+git config --global http.proxy 'socks5://127.0.0.1:1080'
+git config --global https.proxy 'socks5://127.0.0.1:1080'
+
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+```
+
+# 通过文件内容搜索文件
 
 搜索当前目录下所有文件内容，把含有字符串"Advanced Bracket"的文件列出并显示所在行号
 
