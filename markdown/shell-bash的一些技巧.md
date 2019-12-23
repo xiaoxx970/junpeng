@@ -1,3 +1,19 @@
+# ssh快速开启密钥登录
+
+先看本地`~/.ssh`有没有生成好的密钥，没有的话生成一个
+```sh
+ssh-keygen -t rsa -C "xiaoxx97@outlook.com"
+```
+
+然后复制`id_rsa.pub`内容到服务器`~/.ssh/authorized_keys`里面
+
+在服务器修改`sshd`配置文件，重启`sshd`
+
+```sh
+sudo sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/g' etc/ssh/sshd_config
+sudo systemctl restart sshd
+```
+
 # Git
 
 ## 强制拉取使用线上版本
