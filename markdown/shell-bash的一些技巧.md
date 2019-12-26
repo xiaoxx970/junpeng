@@ -7,6 +7,19 @@ ssh-keygen -t rsa -C "xiaoxx97@outlook.com"
 
 然后复制`id_rsa.pub`内容到服务器`~/.ssh/authorized_keys`里面
 
+可以用工具快速复制
+
+```sh
+ssh-copy-id username@203.0.113.0
+```
+
+如果没有工具安装就使用管道复制
+
+```sh
+cat ~/.ssh/id_rsa.pub | \
+ssh username@203.0.113.0 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+```
+
 在服务器修改`sshd`配置文件，重启`sshd`
 
 ```sh
