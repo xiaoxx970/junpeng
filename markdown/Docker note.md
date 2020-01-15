@@ -60,6 +60,12 @@
         ```sh
         docker container prune
         ```
+        
+    - 停止所有容器
+    
+        ```sh
+        docker stop $(docker ps -a -q)
+        ```
     
 - 创建一个我自己的容器
   
