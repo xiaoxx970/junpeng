@@ -1,3 +1,63 @@
+# Git remote
+
+- 查看当前远程链接
+
+    ```sh
+    git remote -v
+    ```
+
+- 修改远程链接
+
+  ```shell
+  git remote set-url origin https://github.com/USERNAME/REPOSITORY.git
+  ```
+
+# 替换配置文件内容
+
+```sh
+sed -i "s/mirrors.cloud.tencent.com/mirrors.tencentyun.com/g" /etc/yum.repos.d/epel.repo
+```
+
+# Tcpdump 实例
+
+- 只抓 SYN 包
+
+    ```sh
+    tcpdump -i eth1 'tcp[tcpflags] = tcp-syn'
+    ```
+
+- 抓 SYN, ACK
+
+    ```sh
+    tcpdump -i eth1 'tcp[tcpflags] & tcp-syn != 0 and tcp [tcpflags] & tcp-ack != 0'
+    ```
+
+- 抓 SMTP 数据
+
+    ```sh
+    tcpdump -i eth1 '((port 25) and (tcp[(tcp[12]>>2):4] = 0x4d41494c))'
+    ```
+
+    > 抓取数据区开始为"MAIL"的包，"MAIL"的十六进制为 0x4d41494c。
+
+- 抓 HTTP GET 数据
+
+    ```sh
+    tcpdump -i eth1 'tcp[(tcp[12]>>2):4] = 0x47455420'
+    ```
+
+    > "GET "的十六进制是 47455420
+
+- 抓 SSH 返回
+
+    ```sh
+    tcpdump -i eth1 'tcp[(tcp[12]>>2):4] = 0x5353482D'
+    ```
+
+    > "SSH-"的十六进制是 0x5353482D
+
+> 参考：https://blog.csdn.net/nanyun2010/article/details/23445223
+
 # 搜索文件内容
 
 搜索当前目录下所有文件内容，把含有字符串"Advanced Bracket"的文件列出并显示所在行号
