@@ -1,3 +1,20 @@
+# 快速配置DHCP客户端
+
+通过`eth0`获取DHCP地址
+
+```sh
+sudo dhclient -v eth0
+```
+
+释放`eth0`的DHCP地址
+
+```sh
+sudo dhclient -v -r eth0
+```
+
+`-v`为显示详细信息
+
+
 # 替换配置文件内容
 
 ```sh
