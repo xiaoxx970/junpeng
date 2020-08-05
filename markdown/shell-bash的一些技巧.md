@@ -1,4 +1,31 @@
-# 替换配置文件内容
+
+# 拷贝文件时显示进度
+
+```
+rsync -avPh www2 www3
+```
+
+# du
+
+最大深度为2查看/www目录内的占用
+
+```bash
+sudo du --max-depth=2  /www -h
+```
+
+# 端口占用
+
+```bash
+sudo lsof -i:25565
+```
+
+或者
+
+```bash
+sudo netstat -anp|grep 25565
+```
+
+# sed
 
 ```sh
 sed -i "s/mirrors.cloud.tencent.com/mirrors.tencentyun.com/g" /etc/yum.repos.d/epel.repo
@@ -123,15 +150,46 @@ find .| xargs grep -rni "Advanced Bracket"
 >
 > -i 忽略大小写
 
-# 解压tar.gz和tar.bz2的命令
 
-1. 解压tar.gz文件
+# Zip 和 tar
+
+压缩一个目录
+
+```bash
+zip -r a.zip 目录名
+```
+
+tar打包
+
+```bash
+tar -zcvf a.tgz 目录
+```
+
+tar解包
+
+```bash
+tar -zxvf a.tgz
+```
+
+tar分卷打包
+
+```bash
+tar chzf - * --exclude notebook.tgz.* |split -d -b 100m - notebook.tgz.
+```
+
+tar分卷解包
+
+```
+cat noteboot.tgz.* | tar xz
+```
+
+解压tar.gz文件
 
 ```bash
 tar -zxvf ×××.tar.gz1
 ```
 
-2. 解压tar.bz2文件
+解压tar.bz2文件
 
 ```bash
 tar -jxvf ×××.tar.bz2
