@@ -1,3 +1,79 @@
+## 网页抓取的四种方法
+
+|    库\支持     | Cookies | Javascript |
+| :------------: | :-----: | :--------: |
+| http.cookiejar |   Yes   |     No     |
+|    requests    |   Yes   |     No     |
+|  HTMLSession   |   No    |    Yes     |
+|    selenium    |   Yes   |    Yes     |
+
+### http.cookiejar
+
+```python
+url = "example.com"
+###########################################
+# https://blog.csdn.net/pipisorry/article/details/47905781
+import http.cookiejar
+import urllib.request
+from bs4 import BeautifulSoup
+cookie = http.cookiejar.CookieJar()
+handler = urllib.request.HTTPCookieProcessor(cookie)
+opener = urllib.request.build_opener(handler)
+response = opener.open(url)
+html_doc = response.read()
+soup = BeautifulSoup(html_doc, 'html.parser')
+```
+
+### requests
+
+```python
+url = "example.com"
+##########################################
+import requests
+from bs4 import BeautifulSoup
+session = requests.Session()
+req = session.get(url)
+html_doc = req.text
+soup = BeautifulSoup(html_doc, 'html.parser')
+```
+
+### HTMLSession
+
+https://github.com/psf/requests-html
+
+```python
+url = "example.com"
+#########################################
+from requests_html import HTMLSession
+from bs4 import BeautifulSoup
+session = HTMLSession()
+r = session.get(url)
+r.html.render(timeout=30)
+html_doc = r.html.html
+soup = BeautifulSoup(html_doc, 'html.parser')
+```
+
+### selenium
+
+https://www.selenium.dev/documentation/zh-cn/
+
+```python
+url = "example.com"
+##########################################
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
+driver = webdriver.Chrome()     # 打开 Chrome 浏览器
+driver.implicitly_wait(20) # seconds
+driver.get(url)
+# https://www.cnblogs.com/hushaojun/p/5985673.html
+html_doc = driver.find_element_by_xpath("//*").get_attribute("outerHTML")
+soup = BeautifulSoup(html_doc, 'html.parser')
+```
+
 ## 写入文件
 
 ```python

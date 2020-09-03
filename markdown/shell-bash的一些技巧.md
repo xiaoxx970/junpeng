@@ -1,3 +1,22 @@
+# 查看网卡流量
+
+## iftop
+
+```sh
+yum install iftop -y
+iftop -m 100M -B
+```
+
+> -B 表示实际速度，默认显示带宽
+
+## iptraf
+
+```sh
+yum install -y iptraf
+iptraf
+```
+
+界面友好的连接展示
 
 # 拷贝文件时显示进度
 
@@ -49,6 +68,8 @@ sed -i "s/mirrors.cloud.tencent.com/mirrors.tencentyun.com/g" /etc/yum.repos.d/e
 ```
 
 # Tcpdump 实例
+
+https://danielmiessler.com/study/tcpdump/
 
 - 只抓 SYN 包
 
